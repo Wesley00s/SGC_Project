@@ -1,0 +1,35 @@
+
+Produto 1
+Nome: arroz
+Estoque: 150
+Valor: 5.00
+
+Produto 2
+Nome: batata
+Estoque: 165
+Valor: 2.00
+
+Produto 3
+Nome: ovo
+Estoque: 200
+Valor: 0.50
+
+Produto 4
+Nome: banana
+Estoque: 500
+Valor: 0.40
+
+Produto 5
+Nome: cebola
+Estoque: 230
+Valor: 2.00
+
+Produto 6
+Nome: uva
+Estoque: 245
+Valor: 2.10
+
+Produto 7
+Nome: alho
+Estoque: 500
+Valor: 2.50

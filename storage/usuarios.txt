@@ -1,0 +1,36 @@
+
+Usuário 1
+Privilégio: Administrador
+Nome: a
+ID: 0
+Senha: 1
+
+Usuário 2
+Privilégio: Usuário Comum
+Nome: lara
+ID: 1
+
+Usuário 3
+Privilégio: Usuário Comum
+Nome: mara
+ID: 2
+
+Usuário 4
+Privilégio: Usuário Comum
+Nome: pedro
+ID: 3
+
+Usuário 5
+Privilégio: Usuário Comum
+Nome: maria
+ID: 4
+
+Usuário 6
+Privilégio: Usuário Comum
+Nome: paulo
+ID: 5
+
+Usuário 7
+Privilégio: Usuário Comum
+Nome: julio
+ID: 6

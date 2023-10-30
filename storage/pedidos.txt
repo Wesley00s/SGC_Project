@@ -1,0 +1,46 @@
+
+
+		==================== Comprovante ================
+
+		-------------------------------------------------
+
+		CLIENTE: 
+
+		ID_CLIENTE: 0
+
+		uva		x4
+		PREÇO UNITÁRIO: R$2.10
+		SUBTOTAL DE PRODUTO: R$8.40
+
+		banana		x25
+		PREÇO UNITÁRIO: R$0.40
+		SUBTOTAL DE PRODUTO: R$10.00
+
+		ovo		x30
+		PREÇO UNITÁRIO: R$0.50
+		SUBTOTAL DE PRODUTO: R$15.00
+
+		arroz		x6
+		PREÇO UNITÁRIO: R$5.00
+		SUBTOTAL DE PRODUTO: R$30.00
+
+		batata		x17
+		PREÇO UNITÁRIO: R$2.00
+		SUBTOTAL DE PRODUTO: R$34.00
+
+		alho		x2
+		PREÇO UNITÁRIO: R$2.50
+		SUBTOTAL DE PRODUTO: R$5.00
+
+		cebola		x2
+		PREÇO UNITÁRIO: R$2.00
+		SUBTOTAL DE PRODUTO: R$4.00
+
+
+
+		TOTAL DA COMPRA: R$106.40
+
+		-----------------------------------------------------
+			OBRIGADO POR ESCOLHER Plaza Mercantil SA
+		=====================================================
+
