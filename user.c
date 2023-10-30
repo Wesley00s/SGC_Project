@@ -8,10 +8,8 @@ void adicionarAoCarrinho(struct ItemCarrinho carrinho[MAX], struct Produto produ
     (*contCarrinho)++;
 }
 
-void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usrIndex)
+void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex)
 {
-    struct Usuario usuario[MAX];
-
     float total = 0;
 
     printf("\n\t\t==================== Comprovante ================\n\n");
@@ -33,10 +31,8 @@ void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usr
     printf("\t\t=====================================================\n\n");
 }
 
-void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usrIndex)
+void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex)
 {
-    struct Usuario usuario[MAX];
-
     FILE *arquivo = fopen("storage/pedidos.txt", "a");
 
     if (arquivo == NULL)
@@ -46,7 +42,9 @@ void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usrI
     }
 
     float total = 0;
-    fprintf(arquivo, "\n\n\t\t==================== Comprovante ================\n\n");
+
+    fprintf(arquivo, "\n\n\tPedido: %d\n\n", contCarrinho + 1);
+    fprintf(arquivo, "\n\t\t==================== Comprovante ================\n\n");
     fprintf(arquivo, "\t\t-------------------------------------------------\n\n");
     fprintf(arquivo, "\t\tCLIENTE: %s\n\n", usuario[usrIndex].nome);
     fprintf(arquivo, "\t\tID_CLIENTE: %d\n\n", usuario[usrIndex].ID);
@@ -73,7 +71,7 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int c
     struct ItemCarrinho carrinho[MAX];
 
     char nomeProduto[MAX];
-    char nomeUsr[MAX];
+    int id;
     int qnt, j = 0, i = 0;
     int opcaoContinue;
     int contPedidos = 0;
@@ -82,28 +80,29 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int c
     int confirm;
 
     printf("\n\t\tREALIZAR COMPRA\n");
-    int usuarioEncontrado = -1; // Marcador para indicar se o usuário foi encontrado
 
-    limparBuffer();
-    printf("\nInforme o nome do usuário: ");
-    scanf("%99[^\n]", nomeUsr);
+    printf("\nInforme o ID do usuário: ");
+    scanf("%d", &id);
     do
     {
+        int usuarioEncontrado = -1; // Marcador para indicar se o usuário foi encontrado
+        int produtoEncontrado = -1;
         for (i = 0; i < contUsr; i++)
         {
-            if (strcmp(nomeUsr, usuario[i].nome) == 0)
+            if (id == usuario[i].ID && usuario[i].tipo == 1)
             {
                 usuarioEncontrado = i; // Marca o índice do usuário encontrado
                 break;                 // Sai do loop assim que encontra o usuário
             }
         }
-        int produtoEncontrado = -1;
         if (usuarioEncontrado != -1)
         {
             limparBuffer();
             printf("\nInforme o nome do produto: ");
             scanf("%99[^\n]", nomeProduto);
 
+            j = -1;
+            
             for (j = 0; j < cont; j++)
             {
                 if (strcmp(nomeProduto, produto[j].nome) == 0)
@@ -138,12 +137,12 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int c
             else
             {
                 printf("\nProduto não encontrado!\n");
-                break;
+                continue;
             }
         }
         else
         {
-            printf("\nNome de usuário não encontrado!\n");
+            printf("\nID de usuário comum não encontrado!\n");
             break;
         }
 
@@ -151,7 +150,7 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int c
         {
             printf("\n\t\tCARRINHO\n");
 
-            exibirCarrinho(carrinho, contCarrinho, usuarioEncontrado);
+            exibirCarrinho(carrinho, contCarrinho, usuario,usuarioEncontrado);
 
             printf("\nConfirmar compra?\n1 - Sim\n2 - Não\n");
             scanf("%d", &confirm);
@@ -166,7 +165,7 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int c
                         if (strcmp(produto[l].nome, produto[m].nome) == 0)
                         {
                             produto[m].estoque -= produto[l].qntPedido;
-                            salvarPedidos(carrinho, contCarrinho, usuarioEncontrado);
+                            salvarPedidos(carrinho, contCarrinho, usuario, usuarioEncontrado);
 
                             break;
                         }

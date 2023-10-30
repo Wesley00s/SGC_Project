@@ -151,7 +151,7 @@ void adicionarUsuario(struct Usuario usuario[MAX], int cont)
     case 1:
         limparBuffer();
 
-        printf("\nInforme o nome do usuario: ");
+        printf("\nCadastrar o nome do usuario: ");
         scanf("%99[^\n]", nome);
 
         strcpy(usuario[cont].nome, nome);
@@ -167,11 +167,11 @@ void adicionarUsuario(struct Usuario usuario[MAX], int cont)
     case 2:
         limparBuffer();
 
-        printf("\nInforme o nome do administrador: ");
+        printf("\nCadastrar o nome do administrador: ");
         scanf("%99[^\n]", nome);
         limparBuffer();
 
-        printf("Informe a senha do administrador: ");
+        printf("Cadastrar a senha do administrador: ");
         scanf("%99[^\n]", senha);
 
         strcpy(usuario[cont].nome, nome);

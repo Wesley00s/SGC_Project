@@ -33,11 +33,11 @@ struct Usuario
 };
 
 void adicionarAoCarrinho(struct ItemCarrinho carrinho[MAX], struct Produto produto[MAX], int *contCarrinho, int produtoIndex, int qnt);
-void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usrIndex);
+void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex);
 void salvarUsuarios(struct Usuario usuario[MAX], int cont);
 void salvarEstoque(struct Produto produto[MAX], int cont);
-void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, int usrIndex);
-;
+void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex);
+
 void adicionarProduto(struct Produto produto[MAX], int cont);
 void removerProduto(struct Produto produto[MAX], int cont);
 void adicionarUsuario(struct Usuario usuario[MAX], int cont);
