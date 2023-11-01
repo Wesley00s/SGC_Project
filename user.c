@@ -1,30 +1,64 @@
 #include "sgc.h"
 
 // Função para adicionar um item ao carrinho de compras
-void adicionarAoCarrinho(struct ItemCarrinho carrinho[MAX], struct Produto produto[MAX], int *contCarrinho, int produtoIndex, int qnt)
+int adicionarAoCarrinho(struct Usuario usuario[MAX], struct Produto produto[MAX], int *contCarrinho, int produtoIndex, int qnt, int estoqueAtualizado)
 {
-    strcpy(carrinho[*contCarrinho].nome, produto[produtoIndex].nome); // Copia o nome do produto para o novo item no carrinho
-    carrinho[*contCarrinho].valor = produto[produtoIndex].valor; // Atribui o valor do produto para o novo item no carrinho
-    carrinho[*contCarrinho].qntPedido = qnt; // Atribui a quantidade desejada para o novo item no carrinho
-    (*contCarrinho)++; // Incrementa o contador do carrinho para refletir a adição do novo item
+    int ocorrencia = 0; // Variável para verificar se o produto já existe no carrinho
+    int adicionar;
+
+    strcpy(usuario[*contCarrinho].carrinho[*contCarrinho].nome, produto[produtoIndex].nome); // Copia o nome do produto para o novo item no carrinho
+    for (int i = 0; i < *contCarrinho; i++)
+    {
+        if (strcmp(usuario[i].carrinho[i].nome, produto[produtoIndex].nome) == 0) // Loop para verificar se o produto já existe no carrinho
+        {
+            ocorrencia = 1;
+            printf("\nProduto já presente no carrinho, quantidade %d.\n", usuario[i].carrinho[i].qntPedido);
+            printf("\nDeseja voltar ou adicionar mais unidades de %s?\n\
+            0 - Voltar\n\
+            1 - Adicionar\n\
+            ", produto[produtoIndex].nome);
+            scanf("%d", &adicionar);
+
+            if (adicionar == 1)
+            {
+                int qntAdd;
+                printf("\nInforme a quantidade: ");
+                scanf("%d", &qntAdd);
+                printf("\nMais %d unidades de %s adicionado ao carrinho!\n", qntAdd, produto[produtoIndex].nome);
+                usuario[i].carrinho[i].qntPedido += qntAdd; // Se o produto já existe, apenas incrementa a quantidade desejada
+                produto[produtoIndex].estoque -= qntAdd; // Se o produto já existe 
+                break;
+            }
+            return 1;
+            break;
+        }
+    }
+
+    if (ocorrencia == 0)
+    {
+        usuario[*contCarrinho].carrinho[*contCarrinho].valor = produto[produtoIndex].valor; // Atribui o valor do produto para o novo item no carrinho
+        usuario[*contCarrinho].carrinho[*contCarrinho].qntPedido = qnt;                     // Atribui a quantidade desejada para o novo item no carrinho
+        (*contCarrinho)++; // Incrementa o contador do carrinho para refletir a adição do novo item
+        return 0;
+    }
 }
 
 // Função para exibir carrinho de compras
-void exibirCarrinho(struct ItemCarrinho carrinho[MAX], int contCarrinho)
+void exibirCarrinho(struct Usuario usuario[MAX], int contCarrinho)
 {
     printf("\n\t\tCARRINHO\n");
     for (int i = 0; i < contCarrinho; i++) // Loop para percorrer todos os itens no carrinho
     {
-        printf("\n\n\t* Produto: %s", carrinho[i].nome);
-        printf("\n\tUnidade: R$%.2f", carrinho[i].valor);
-        printf("\n\tQuantidade: %d", carrinho[i].qntPedido);
-        printf("\n\tTotal produto: R$%.2f", carrinho[i].qntPedido * carrinho[i].valor);
+        printf("\n\n\t* Produto: %s", usuario[i].carrinho[i].nome);
+        printf("\n\tUnidade: R$%.2f", usuario[i].carrinho[i].valor);
+        printf("\n\tQuantidade: %d", usuario[i].carrinho[i].qntPedido);
+        printf("\n\tTotal produto: R$%.2f", usuario[i].carrinho[i].qntPedido * usuario[i].carrinho[i].valor);
     }
     printf("\n\n");
 }
 
 // Função para remover item do carrinho
-void removerDoCarrinho(struct ItemCarrinho carrinho[MAX], int *contCarrinho, char *nome)
+void removerDoCarrinho(struct Usuario usuario[MAX], int *contCarrinho, char *nome)
 {
     //  Inicializa uma variável indice para armazenar o índice do item a ser removido. Inicia com -1 para indicar que o item ainda não foi encontrado.
     int indice = -1;
@@ -32,7 +66,7 @@ void removerDoCarrinho(struct ItemCarrinho carrinho[MAX], int *contCarrinho, cha
     // Procurando o índice do item pelo nome
     for (int i = 0; i < *contCarrinho; i++)
     {
-        if (strcmp(carrinho[i].nome, nome) == 0) // Verifica se o nome do produto no carrinho é igual ao nome fornecido para remoção.
+        if (strcmp(usuario[i].carrinho[i].nome, nome) == 0) // Verifica se o nome do produto no carrinho é igual ao nome fornecido para remoção.
         {
             //  Se encontrar o item, armazena o índice e sai do loop.
             indice = i; 
@@ -45,9 +79,9 @@ void removerDoCarrinho(struct ItemCarrinho carrinho[MAX], int *contCarrinho, cha
         // Movendo os itens subsequentes uma posição para frente para "remover" o item no índice especificado
         for (int i = indice; i < (*contCarrinho - 1); i++)
         {
-            strcpy(carrinho[i].nome, carrinho[i + 1].nome);
-            carrinho[i].valor = carrinho[i + 1].valor;
-            carrinho[i].qntPedido = carrinho[i + 1].qntPedido;
+            strcpy(usuario[i].carrinho[i].nome, usuario[i].carrinho[i + 1].nome);
+            usuario[i].carrinho[i].valor = usuario[i].carrinho[i + 1].valor;
+            usuario[i].carrinho[i].qntPedido = usuario[i].carrinho[i + 1].qntPedido;
         }
         (*contCarrinho)--; // Decrementeando o contador de carrinho
         printf("\nProduto %s removido do carrinho!\n", nome);
@@ -59,9 +93,9 @@ void removerDoCarrinho(struct ItemCarrinho carrinho[MAX], int *contCarrinho, cha
 }
 
 // Função para exibir um comprovante de compra
-void exibirComprovante(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex)
+void exibirComprovante(struct Usuario usuario[MAX], int contCarrinho, int usrIndex)
 {
-    float total = 0;
+    float total = 0; // Total da compra
 
     // Exibe o cabeçalho do comprovante
     printf("\n\t\t==================== COMPROVANTE ================\n\n");
@@ -70,18 +104,19 @@ void exibirComprovante(struct ItemCarrinho carrinho[MAX], int contCarrinho, stru
     printf("\t\tID_CLIENTE: %d\n\n", usuario[usrIndex].ID);
 
     // Loop para percorrer todos os itens no carrinho
-    for (int k = 0; k < contCarrinho; k++)
+    for (int i = 0; i < contCarrinho; i++)
     {
         // Exibe detalhes de cada item no carrinho
-        printf("\t\t%s\t\tx%d", carrinho[k].nome, carrinho[k].qntPedido);
-        printf("\n\t\tPREÇO UNITÁRIO: R$%.2f", carrinho[k].valor);
-        printf("\n\t\tSUBTOTAL DE PRODUTO: R$%.2f\n\n", carrinho[k].valor * carrinho[k].qntPedido);
+        printf("\t\t%s\t\tx%d", usuario[i].carrinho[i].nome, usuario[i].carrinho[i].qntPedido);
+        printf("\n\t\tPREÇO UNITÁRIO: R$%.2f", usuario[i].carrinho[i].valor);
+        printf("\n\t\tSUBTOTAL DE PRODUTO: R$%.2f\n\n", usuario[i].carrinho[i].valor * usuario[i].carrinho[i].qntPedido);
 
         // Calcula o total acumulado
-        total += carrinho[k].qntPedido * carrinho[k].valor;
+        total += usuario[i].carrinho[i].qntPedido * usuario[i].carrinho[i].valor;
     }
 
     // Exibe o total da compra e o rodapé do comprovante
+    printf("\n\n\t\t-----------------------------------------------------\n");
     printf("\n\n\t\tTOTAL DA COMPRA: R$%.2f\n\n", total);
     printf("\t\t-----------------------------------------------------\n");
     printf("\t\t\tOBRIGADO POR ESCOLHER Plaza Mercantil SA\n");
@@ -89,7 +124,7 @@ void exibirComprovante(struct ItemCarrinho carrinho[MAX], int contCarrinho, stru
 }
 
 // Função para salvar os detalhes do pedido em um arquivo
-void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct Usuario usuario[MAX], int usrIndex)
+void salvarPedidos(struct Usuario usuario[MAX], int contCarrinho, int usrIndex)
 {
     // Abre o arquivo no modo de adição (append)
     FILE *arquivo = fopen("storage/pedidos.txt", "a");
@@ -102,7 +137,7 @@ void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct U
         exit(1);
     }
 
-    float total = 0;
+    float total = 0; // Total da compra
 
     // Escreve no arquivo os detalhes do pedido
     fprintf(arquivo, "\n\n* PEDIDO\n\n");
@@ -112,18 +147,19 @@ void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct U
     fprintf(arquivo, "\t\tID_CLIENTE: %d\n\n", usuario[usrIndex].ID);
 
     // Loop para percorrer todos os itens no carrinho
-    for (int k = 0; k < contCarrinho; k++)
+    for (int i = 0; i < contCarrinho; i++)
     {
-        fprintf(arquivo, "\t\t%s\t\tx %d", carrinho[k].nome, carrinho[k].qntPedido);
-        fprintf(arquivo, "\n\t\tPREÇO UNITÁRIO: R$%.2f", carrinho[k].valor);
-        fprintf(arquivo, "\n\t\tSUBTOTAL DE PRODUTO: R$%.2f\n\n", carrinho[k].valor * carrinho[k].qntPedido);
+        fprintf(arquivo, "\t\t%s\t\tx %d", usuario[i].carrinho[i].nome, usuario[i].carrinho[i].qntPedido);
+        fprintf(arquivo, "\n\t\tPREÇO UNITÁRIO: R$%.2f", usuario[i].carrinho[i].valor);
+        fprintf(arquivo, "\n\t\tSUBTOTAL DE PRODUTO: R$%.2f\n\n", usuario[i].carrinho[i].valor * usuario[i].carrinho[i].qntPedido);
 
         // Calcula o total acumulado
-        total += carrinho[k].qntPedido * carrinho[k].valor;
+        total += usuario[i].carrinho[i].qntPedido * usuario[i].carrinho[i].valor;
     }
 
     // Escreve no arquivo o total da compra e o rodapé do comprovante
-    fprintf(arquivo, "\n\n\t\tTOTAL DA COMPRA: R$%.2f\n\n", total);
+    fprintf(arquivo, "\n\n\t\t-----------------------------------------------------\n");
+    fprintf(arquivo, "\t\tTOTAL DA COMPRA: R$%.2f\n\n", total);
     fprintf(arquivo, "\t\t-----------------------------------------------------\n");
     fprintf(arquivo, "\t\t\tOBRIGADO POR ESCOLHER Plaza Mercantil SA\n");
     fprintf(arquivo, "\t\t=====================================================\n\n");
@@ -131,12 +167,14 @@ void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct U
     // Fecha o arquivo
     fclose(arquivo);
 }
-void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], struct ItemCarrinho carrinho[MAX], int cont, int contUsr)
+
+
+void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int cont, int contUsr)
 {
     // Variáveis para armazenar dados do pedido
     char nomeProduto[MAX];
     int id;
-    int qntComprada, flagProduto = 0, flagUsr = 0;
+    int qntComprada = 0, flagProduto = 0, flagUsr = 0;
     int opcaoContinue;
     int contPedidos = 0;
     int contCarrinho = 0;
@@ -183,103 +221,128 @@ void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], struc
                     break;                           // Sai do loop assim que encontra o produto
                 }
             }
+            int estoqueAtualizado = produto[produtoEncontrado].estoque;
 
+            int controleDeFluxoDeQuantidade = 0; // Indicador para verificar se o usuário excedeu a quantidade em estoque do produto
             if (produtoEncontrado != -1)
             {
-                int controleDeFluxoDeQuantidade = 0; // Indicador para verificar se o usuário excedeu a quantidade em estoque do produto
-
                 do // Loop para controlar o fluxo caso  o usuário exceda a quantidade em estoque do produto, para que retorne desse ponto
+                {
+                    estoqueAtualizado -= qntComprada;
+
+                    int ocorrenciaProdutoNoCarrinho = 0; // Verificador de produto exitente no carrinho
+
+                    for (int i = 0; i < contCarrinho; i++)
                     {
-                        // Limpa o buffer do teclado
-                        limparBuffer();
-
-                        // Solicita a quantidade desejada do produto
-                        printf("\nInforme a quantidade de %s que deseja comprar (Estoque %d): ", produto[produtoEncontrado].nome, produto[produtoEncontrado].estoque);
-                        scanf("%d", &qntComprada);
-
-                        controleDeFluxoDeQuantidade = 0; // Inicializa indicador com zero para garantir uma verificação correta após o usuário exceder a quantidade em estoque do produto
-
-                        if (qntComprada <= produto[produtoEncontrado].estoque)
+                        if (strcmp(usuario[usuarioEncontrado].carrinho[i].nome, produto[produtoEncontrado].nome) == 0) // Loop para verificar se o produto já existe no carrinho
                         {
-                            printf("\nAdicionado ao Carrinho de compras.\n");
+                            ocorrenciaProdutoNoCarrinho = 1;
+                        }
+                    }
 
-                            // Adiciona o produto ao carrinho
-                            adicionarAoCarrinho(carrinho, produto, &contCarrinho, produtoEncontrado, qntComprada);
+                    if (ocorrenciaProdutoNoCarrinho == 0)
+                    {
+                        limparBuffer();
+                        // Solicita a quantidade desejada do produto
+                        printf("\nInforme a quantidade de %s que deseja comprar (Estoque %d): ", produto[produtoEncontrado].nome, estoqueAtualizado);
+                        scanf("%d", &qntComprada);
+                    }
 
-                            // Exibe o carrinho
-                            exibirCarrinho(carrinho, contCarrinho);
+                    // Limpa o buffer do teclado
 
-                            // Incrementa o contador de pedidos
-                            contPedidos++;
+                    controleDeFluxoDeQuantidade = 0; // Inicializa indicador com zero para garantir uma verificação correta após o usuário exceder a quantidade em estoque do produto
 
-                            int controleDeFluxoDeRemocao = 0; // Indicador para verificar se o usuário informou o nome de um produto para remover não existente no estoque
+                    if (qntComprada <= produto[produtoEncontrado].estoque && qntComprada > 0)
+                    {
+                        printf("\nAdicionado ao Carrinho de compras.\n");
 
-                            do // Loop para controlar o fluxo caso o usuário informe o nome de um produto para remover não existente no estoque, para que retorne desse ponto
+                        // Adiciona o produto ao carrinho
+                        adicionarAoCarrinho(usuario, produto, &contCarrinho, produtoEncontrado, qntComprada, estoqueAtualizado);
+
+                        // Exibe o carrinho
+                        exibirCarrinho(usuario, contCarrinho);
+
+                        // Incrementa o contador de pedidos
+                        contPedidos++;
+
+                        int controleDeFluxoDeRemocao = 0; // Indicador para verificar se o usuário informou o nome de um produto para remover não existente no estoque
+
+                        do // Loop para controlar o fluxo caso o usuário informe o nome de um produto para remover não existente no estoque, para que retorne desse ponto
+                        {
+                            controleDeFluxoDeQuantidade = 0;
+                            // Limpa o buffer do teclado
+                            limparBuffer();
+
+                            printf("\n\
+                            Continuar compra ou finalizar?\n\
+                            0 - Cancelar compra\n\
+                            1 - Continuar\n\
+                            2 - Finalizar\n\
+                            3 - Remover item\n\
+                            ");
+                            scanf("%d", &opcaoContinue);
+
+                            char nomeProdutoRemovido[MAX]; // Guarda o nome do produto infromado pelo usuário para ser removido do estoque
+
+                            switch (opcaoContinue) // Condições para opções do usuário
                             {
-                                controleDeFluxoDeQuantidade = 0;
+                            case 0: // Se o usuário cancelar a compra
+                                printf("\nCompra cancelada!\n");
+                                break;
+                            case 1: // Se o usuário escolher continuar adicionando produtos no carrinho
+                                printf("\nContinuar...\n");
+                                break;
+                            case 2: // Finaliza compra
+                                    // Atualiza o estoque do produto original e salva os pedidos
+                                for (int j = 0; j < contCarrinho; j++)
+                                {
+                                    for (int i = 0; i < cont; i++)
+                                    {
+                                        if (strcmp(usuario[i].carrinho[j].nome, produto[i].nome) == 0)
+                                        {
+                                            produto[i].estoque -= usuario[i].carrinho[j].qntPedido;
+                                            // Salva o estoque atualizado
+                                            salvarEstoque(produto, cont);
+                                            salvarPedidos(usuario, contCarrinho, usuarioEncontrado); // Salva pedidos em um arquivo
+                                        }
+                                    }
+                                }
+
+                                printf("\nCompras realizadas com sucesso!\n");
+                                exibirComprovante(usuario, contCarrinho, usuarioEncontrado); // Exibe o comprovante da compra
+
+                                controleDeFluxoDeQuantidade = 0; // Sinaliza para sair do loop após finalizar compras
+                                break;
+                            case 3: // Remover produto o carrinho
                                 // Limpa o buffer do teclado
                                 limparBuffer();
 
-                                printf("\nContinuar compra ou finalizar?\n0 - Cancelar compra\n1 - Continuar\n2 - Finalizar\n3 - Remover item\n");
-                                scanf("%d", &opcaoContinue);
+                                // Solicita o nome do produto a ser removido do carrinho
+                                printf("\nNome do produto que deseja remover do carrinho: ");
+                                scanf("%99[^\n]", nomeProdutoRemovido);
 
-                                char nomeProdutoRemovido[MAX]; // Guarda o nome do produto infromado pelo usuário para ser removido do estoque
+                                // Remove o produto do carrinho
+                                removerDoCarrinho(usuario, &contCarrinho, nomeProdutoRemovido);
 
-                                switch (opcaoContinue) // Condições para opções do usuário
-                                {
-                                case 0: // Se o usuário cancelar a compra
-                                    printf("\nCompra cancelada!\n");
-                                    break;
-                                case 1: // Se o usuário escolher continuar adicionando produtos no carrinho
-                                    printf("\nContinuar...\n");
-                                    break;
-                                case 2: // Finaliza compra
-                                    // Atualiza o estoque do produto original e salva os pedidos
-                                    for (int j = 0; j < contPedidos; j++)
-                                    {
-                                        for (int i = 0; i < cont; i++)
-                                        {
-                                            if (strcmp(carrinho[j].nome, produto[i].nome) == 0) // Verifica o nome do produto para salvar no estoque
-                                            {
-                                                produto[i].estoque -= carrinho[j].qntPedido;                       // Decrementa o estoque do produto
-                                                salvarPedidos(carrinho, contCarrinho, usuario, usuarioEncontrado); // Salva pedidos em um arquivo
-                                                salvarEstoque(produto, cont);                                      // Atualiza estoque após a compra bem sucedida
-                                            }
-                                        }
-                                    }
-                                    printf("\nCompras realizadas com sucesso!\n");
-                                    exibirComprovante(carrinho, contCarrinho, usuario, usuarioEncontrado); // Exibe o comprovante da compra
-                                    controleDeFluxoDeQuantidade = 0; // Sinalizapara sair do loop após finalizar compras
+                                // Exibe o carrinho
+                                exibirCarrinho(usuario, contCarrinho);
 
-                                    break;
-                                case 3: // Remover produto o carrinho
-                                    // Limpa o buffer do teclado
-                                    limparBuffer();
-
-                                    // Solicita o nome do produto a ser removido do carrinho
-                                    printf("\nNome do produto que deseja remover do carrinho: ");
-                                    scanf("%99[^\n]", nomeProdutoRemovido);
-
-                                    // Remove o produto do carrinho
-                                    removerDoCarrinho(carrinho, &contCarrinho, nomeProdutoRemovido);
-
-                                    // Exibe o carrinho
-                                    exibirCarrinho(carrinho, contCarrinho);
-
-                                    // Sinaliza o controle de fluxo para continuar a remoção
-                                    controleDeFluxoDeRemocao = 1;
-                                    break;
-                                default:
-                                    printf("\nOpção inválida!\n");
-                                }
-                            } while (controleDeFluxoDeRemocao != 0); // Condção para quando o usuário informar um nome de produto não existente no estoque ser verdadeira e voltar do ponto indicado
+                                // Sinaliza o controle de fluxo para continuar a remoção
+                                controleDeFluxoDeRemocao = 1;
+                                break;
+                            default:
+                                printf("\nOpção inválida!\n");
+                            }
+                        } while (controleDeFluxoDeRemocao != 0); // Condção para quando o usuário informar um nome de produto não existente no estoque ser verdadeira e voltar do ponto indicado
                         }
                         else
                         {
                             printf("\nEstoque insuficiente!\n");
                             controleDeFluxoDeQuantidade = 1; // Sinaliza o controle de fluxo para continuar a compra
                         }
-                    } while (controleDeFluxoDeQuantidade != 0); // Condção para quando o usuário exceder ser verdadeira e voltar do ponto indicado
+                    }
+                    while (controleDeFluxoDeQuantidade != 0)
+                        ; // Condção para quando o usuário exceder ser verdadeira e voltar do ponto indicado
             }
             else
             {
