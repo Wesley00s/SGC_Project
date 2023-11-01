@@ -15,28 +15,14 @@ int main()
     int opcaoTipo;
     int opcaoUsrComum;
 
-
+    printf("\n\t========================================================================================================\n");
+    printf("\n\tDe Plaza Mercantil SA: Bem-vindo ao nosso sistema! Explore, descubra, compre. É um prazer tê-lo conosco!\n");
+    printf("\n\t========================================================================================================\n");
+    printf("\nNenhum adiministrador cadastrado, por favor, pressione enter e efetue o cadastro!\n");
+    criarAdm(usuario, contUser);
+    contUser++;
     do
     {
-        int verifyAdm = 0;
-
-        for (int i = 0; i < contUser; i++)
-        {
-            if (usuario[i].tipo == 2)
-            {
-                verifyAdm = 1;
-                break;
-            }
-        }
-
-        if (verifyAdm == 0)
-        {
-            printf("\nNenhum administrator cadastrado, por favor efetue o cadastro de administador para prosseguir.\n");
-            usuario[contUser].tipo = 2;
-            criarAdm(usuario, contUser);
-            contUser++;
-        }
-
         int encontrouAdm = 0;
         strcpy(nomeAdm, " ");
         printf("\nQual tipo de usuário você é:\n0 - Encerrar programa.\n1 - Administrador (Senha requerida).\n2 - Usuário comum.\n");
@@ -83,14 +69,14 @@ int main()
                                 printf("\nEncerrando adiministração de usuários...\n");
                                 break;
                             case 1:
-                                adicionarUsuario(usuario, contUser);
+                                if (adicionarUsuario(usuario, contUser) == 0)
                                 contUser++;
                                 break;
                             case 2:
                                 listarUsuarios(usuario, contUser);
                                 break;
                             case 3:
-                                removerUsuario(usuario, contUser);
+                                if (removerUsuario(usuario, usuario[i].ID, contUser) == 0)
                                 contUser--;
                                 break;
                             default:
@@ -112,14 +98,14 @@ int main()
                                 printf("\nEncerrando administração de produtos...\n");
                                 break;
                             case 1:
-                                adicionarProduto(produto, cont);
+                                if (adicionarProduto(produto, cont) == 0)
                                 cont++;
                                 break;
                             case 2:
                                 listarProdutos(produto, cont);
                                 break;
                             case 3:
-                                removerProduto(produto, cont);
+                                if (removerProduto(produto, cont) == 0)
                                 cont--;
                                 break;
                             default:

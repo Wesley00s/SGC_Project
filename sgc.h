@@ -48,11 +48,11 @@ void salvarPedidos(struct ItemCarrinho carrinho[MAX], int contCarrinho, struct U
 
 void criarUsuarioComum(struct Usuario usuario[MAX], int cont);
 void criarAdm(struct Usuario usuario[MAX], int cont);
-void adicionarProduto(struct Produto produto[MAX], int cont);
-void removerProduto(struct Produto produto[MAX], int cont);
-void adicionarUsuario(struct Usuario usuario[MAX], int cont);
+int adicionarProduto(struct Produto produto[MAX], int cont);
+int removerProduto(struct Produto produto[MAX], int cont);
+int adicionarUsuario(struct Usuario usuario[MAX], int cont);
 void listarUsuarios(struct Usuario usuario[MAX], int cont);
-void removerUsuario(struct Usuario usuario[MAX], int cont);
+int removerUsuario(struct Usuario usuario[MAX], int idUserAtual, int cont);
 void listarProdutos(struct Produto produto[MAX], int cont);
 void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], struct ItemCarrinho carrinho[MAX], int cont, int contUsr);
 void carrinhoDeCompras(struct Produto produto[MAX], char nomeProduto[MAX], int qnt, int opcaoCarrinho, int cont);

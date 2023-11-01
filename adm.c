@@ -18,7 +18,7 @@ void salvarUsuarios(struct Usuario usuario[MAX], int cont)
 
     for (int i = 0; i < cont; i++)
     {
-        fprintf(arquivo, "\nUsuário %d", i + 1);
+        fprintf(arquivo, "\n* Usuário %d", i + 1);
         fprintf(arquivo, "\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador");
         fprintf(arquivo, "\nNome: %s", usuario[i].nome);
         fprintf(arquivo, "\nID: %d\n", usuario[i].ID);
@@ -44,19 +44,16 @@ void salvarEstoque(struct Produto produto[MAX], int cont)
 
     for (int i = 0; i < cont; i++)
     {
-        if (produto[i].valor > 0)
-        {
-            fprintf(arquivo, "\n* Produto\n");
-            fprintf(arquivo, "Nome: %s\n", produto[i].nome);
-            fprintf(arquivo, "Estoque: %d\n", produto[i].estoque);
-            fprintf(arquivo, "Valor: %.2lf\n", produto[i].valor);
-        }
+        fprintf(arquivo, "\n* Produto %d\n", i + 1);
+        fprintf(arquivo, "Nome: %s\n", produto[i].nome);
+        fprintf(arquivo, "Estoque: %d\n", produto[i].estoque);
+        fprintf(arquivo, "Valor: %.2lf\n", produto[i].valor);
     }
 
     fclose(arquivo);
 }
 
-void adicionarProduto(struct Produto produto[MAX], int cont)
+int adicionarProduto(struct Produto produto[MAX], int cont)
 {
     char nome[MAX];
     int qntMudarEstoque;
@@ -89,7 +86,7 @@ void adicionarProduto(struct Produto produto[MAX], int cont)
                 printf("\n1 - Adicionar\n2 - Remover\n");
                 scanf("%d", &opcEstoque);
 
-                printf("\nInforme a quantidade que deseja %s", (opcEstoque == 1) ? "adicionar" : "remover: ");
+                printf("\nInforme a quantidade que deseja %s", (opcEstoque == 1) ? "adicionar: " : "remover: ");
                 scanf("%d", &qntMudarEstoque);
                 if (qntMudarEstoque <= 0)
                 {
@@ -130,6 +127,9 @@ void adicionarProduto(struct Produto produto[MAX], int cont)
                 produto[cont].valor = novoValProduto;
                 printf("\nProduto adicionado com sucesso!\n");
                 operacaoRealizada = 1;
+                salvarEstoque(produto, cont + 1);
+
+                return 0;
             }
             else
             {
@@ -144,7 +144,9 @@ void adicionarProduto(struct Produto produto[MAX], int cont)
 
     if (operacaoRealizada = 1)
     {
-        salvarEstoque(produto, cont + 1);
+        salvarEstoque(produto, cont);
+        printf("\nProduto %s adicionado com sucesso!\n", produto[cont].nome);
+        return 1;
     }
 }
 
@@ -152,17 +154,14 @@ void listarProdutos(struct Produto produto[MAX], int cont)
 {
     for (int i = 0; i < cont; i++)
     {
-        if (produto[i].valor > 0)
-        {
-            printf("\nAdicionar produto\n");
-            printf("Nome: %s\n", produto[i].nome);
-            printf("Estoque: %d\n", produto[i].estoque);
-            printf("Valor: %.2lf\n", produto[i].valor);
-        }
+        printf("\n* Produto %d\n", i + 1);
+        printf("Nome: %s\n", produto[i].nome);
+        printf("Estoque: %d\n", produto[i].estoque);
+        printf("Valor: %.2lf\n", produto[i].valor);
     }
 }
 
-void removerProduto(struct Produto produto[MAX], int cont)
+int removerProduto(struct Produto produto[MAX], int cont)
 {
     char nome[MAX];
     int control = 0;
@@ -189,6 +188,7 @@ void removerProduto(struct Produto produto[MAX], int cont)
     {
         printf("Produto removido com sucesso!\n");
         salvarEstoque(produto, cont);
+        return 0;
     }
     else
     {
@@ -240,32 +240,56 @@ void criarUsuarioComum(struct Usuario usuario[MAX], int cont)
     salvarUsuarios(usuario, cont);
 }
 
-void adicionarUsuario(struct Usuario usuario[MAX], int cont)
+int adicionarUsuario(struct Usuario usuario[MAX], int cont)
 {
     int tipo;
 
+    int verifyAdm = 0;
+
+    for (int i = 0; i < cont; i++)
+    {
+        if (usuario[i].tipo == 2)
+        {
+            verifyAdm = 1;
+            break;
+        }
+    }
+
+    if (verifyAdm == 0)
+    {
+        printf("\nNenhum administrator cadastrado, por favor efetue o cadastro de administador para prosseguir.\n");
+        usuario[cont].tipo = 2;
+        criarAdm(usuario, cont);
+        return 0;
+    }
+    else
+    {
         printf("\nInforme o tipo de usuário:\n1 - Usuário comum.\n2 - Administrador.\n");
         scanf("%d", &tipo);
 
         switch (tipo)
         {
-        case 1:
-            criarUsuarioComum(usuario, cont);
-            break;
-        case 2:
-            criarAdm(usuario, cont);
-            break;
-        default:
-            printf("\nTipo iválido!\n");
-            break;
+            case 1:
+                criarUsuarioComum(usuario, cont);
+                return 0;
+                break;
+            case 2:
+                criarAdm(usuario, cont);
+                return 0;
+                break;
+            default:
+                printf("\nTipo iválido!\n");
+                break;
+        }
     }
+
 }
 
 void listarUsuarios(struct Usuario usuario[MAX], int cont)
 {
     for (int i = 0; i < cont; i++)
     {
-        printf("\nUsuário %d", i + 1);
+        printf("\n* Usuário %d", i + 1);
         printf("\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador");
         printf("\nNome: %s", usuario[i].nome);
         printf("\nID: %d\n", usuario[i].ID);
@@ -277,25 +301,34 @@ void listarUsuarios(struct Usuario usuario[MAX], int cont)
     }
 }
 
-void removerUsuario(struct Usuario usuario[MAX], int cont)
+int removerUsuario(struct Usuario usuario[MAX], int idUserAtual, int cont)
 {
     int id;
 
     printf("\nInforme o ID do usuário: ");
     scanf("%d", &id);
 
-    if (id >= 0 && id <= cont)
+
+    if (usuario[idUserAtual].tipo == 2 && usuario[idUserAtual].ID == id)
     {
-        for (int i = id; i < cont - 1; i++)
-        {
-            usuario[i] = usuario[i + 1];
-        }
-        cont--;
-        printf("Usuário removido com sucesso!\n");
-        salvarUsuarios(usuario, cont);
+        printf("\nUm adiministrador não pode se auto-remover. %s por favor, cadastre outro admin para realizar a remoção!\n", usuario[idUserAtual].nome);
     }
     else
     {
-        printf("\nUsuário não encontrado!\n");
+        if (id >= 0 && id <= cont)
+        {
+            for (int i = id; i < cont - 1; i++)
+            {
+                usuario[i] = usuario[i + 1];
+            }
+            cont--;
+            printf("Usuário removido com sucesso!\n");
+            salvarUsuarios(usuario, cont);
+            return 0;
+        }
+        else
+        {
+            printf("\nUsuário não encontrado!\n");
+        }
     }
 }
