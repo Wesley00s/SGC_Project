@@ -9,7 +9,7 @@ void limparBuffer()
 // Função para salvar usuários em um arquivo de texto
 void salvarUsuarios(struct Usuario usuario[MAX], int cont)
 {
-     // Abre o arquivo "usuarios.txt" para escrita
+    // Abre o arquivo "usuarios.txt" para escrita
     FILE *arquivo = fopen("storage/usuarios.txt", "w");
 
     if (arquivo == NULL) // Verifica se o arquivo foi aberto corretamente
@@ -18,7 +18,7 @@ void salvarUsuarios(struct Usuario usuario[MAX], int cont)
         printf("\nErro ao abrir o arquivo!\n");
         exit(1);
     }
-    
+
     // Verifica se o arquivo foi aberto corretamente
     for (int i = 0; i < cont; i++)
     {
@@ -64,9 +64,9 @@ void salvarEstoque(struct Produto produto[MAX], int cont)
 // Função para adicionar um produto ao estoque
 int adicionarProduto(struct Produto produto[MAX], int cont)
 {
-    char nome[MAX]; // Armazena o nome do produto fornecido pelo usuário
-    int qntMudarEstoque; // Armazena a quantidade que o usuário deseja adicionar ou remover do estoque do produto
-    float novoValProduto; // Armazena o novo valor do produto fornecido pelo usuário
+    char nome[MAX];             // Armazena o nome do produto fornecido pelo usuário
+    int qntMudarEstoque;        // Armazena a quantidade que o usuário deseja adicionar ou remover do estoque do produto
+    float novoValProduto;       // Armazena o novo valor do produto fornecido pelo usuário
     int encontrouOcorencia = 0; // Sinaliza se o produto já está presente no estoque (1 se encontrado, 0 se não encontrado)
     int operacaoRealizada = 0;  // Sinaliza se alguma operação (adicionar, remover, atualizar preço) foi realizada com sucesso (1 se sim, 0 se não)
 
@@ -83,7 +83,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
             operacaoRealizada = 1;  // Indica que uma operação será realizada no produto
             encontrouOcorencia = 1; // Indica que o produto já está presente no estoque
 
-            int opc; // Opção para indicar qual ação o usuário vai tomar após encontrar um produuto já exitente no estoque
+            int opc;        // Opção para indicar qual ação o usuário vai tomar após encontrar um produuto já exitente no estoque
             int opcEstoque; // Indica a opção adicionar ou remover
 
             // Exibe opções ao usuário para atualizar estoque ou preço
@@ -93,12 +93,13 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
             0 - Sair.\n\
             1 - Estoque.\n\
             2 - Preço.\n\
-            ", produto[i].nome, produto[i].estoque, produto[i].valor);
+            ",
+                   produto[i].nome, produto[i].estoque, produto[i].valor);
             scanf("%d", &opc);
 
             switch (opc) // Loop para opções do usuário
             {
-            case 0: 
+            case 0:
                 encontrouOcorencia = 0;
                 printf("\nSaindo...\n");
                 return -1;
@@ -131,7 +132,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
             case 2: // Atualiza o preço do produto
 
                 printf("\nNovo preço do produto. Preço atual R$%.2f: R$ ", produto[i].valor);
-                scanf("%f", &novoValProduto); 
+                scanf("%f", &novoValProduto);
                 if (novoValProduto > 0)
                 {
                     produto[i].valor = novoValProduto;
