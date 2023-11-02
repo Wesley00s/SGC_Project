@@ -1,9 +1,9 @@
 #include "sgc.h"
 
+// Função para limpar o buffer do teclado
 void limparBuffer()
 {
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 }
 
 // Função para salvar usuários em um arquivo de texto
@@ -13,7 +13,6 @@ void salvarUsuarios(struct Usuario usuario[MAX], int cont)
     FILE *arquivo = fopen("storage/usuarios.txt", "w");
 
     if (arquivo == NULL) // Verifica se o arquivo foi aberto corretamente
-
     {
         printf("\nErro ao abrir o arquivo!\n");
         exit(1);
@@ -93,8 +92,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
             0 - Sair.\n\
             1 - Estoque.\n\
             2 - Preço.\n\
-            ",
-                   produto[i].nome, produto[i].estoque, produto[i].valor);
+            ", produto[i].nome, produto[i].estoque, produto[i].valor);
             scanf("%d", &opc);
 
             switch (opc) // Loop para opções do usuário
@@ -191,12 +189,19 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
 // Função para listar produtos
 void listarProdutos(struct Produto produto[MAX], int cont)
 {
-    for (int i = 0; i < cont; i++) // Loop para peercorrer todos os produtos listados
+    if (cont == 0)
     {
-        printf("\n* Produto %d\n", i + 1);
-        printf("Nome: %s\n", produto[i].nome);
-        printf("Estoque: %d\n", produto[i].estoque);
-        printf("Valor: R$%.2lf\n", produto[i].valor);
+        printf("\nNenhum produto listado.\n");
+    }
+    else
+    {
+        for (int i = 0; i < cont; i++) // Loop para peercorrer todos os produtos listados
+        {
+            printf("\n* Produto %d\n", i + 1);
+            printf("Nome: %s\n", produto[i].nome);
+            printf("Estoque: %d\n", produto[i].estoque);
+            printf("Valor: R$%.2lf\n", produto[i].valor);
+        }
     }
 }
 
@@ -205,35 +210,42 @@ int removerProduto(struct Produto produto[MAX], int cont)
     char nome[MAX];  // Armazena o nome do produto fornecido pelo usuário
     int control = 0; // Sinaliza se a operação de remoção foi realizada com sucesso (1 se sim, 0 se não)
 
-    limparBuffer(); // Limpa o buffer do teclado
-
-    printf("\n* Remover produto\n");
-    printf("\nInforme o nome do produto: ");
-    scanf("%99[^\n]", nome); // Solicita ao usuário que informe o nome do produto a ser removido
-
-    for (int i = 0; i < cont; i++) // Loop para percorrer o estoque e encontrar o produto
+    if (cont == 0)
     {
-        if (strcmp(produto[i].nome, nome) == 0) // Verifica se o nome do produto atual é igual ao fornecido pelo usuário
-        {
-            for (int j = i; j < cont - 1; j++) // Loop para reorganizar o estoque após a remoção do produto
-            {
-                produto[j] = produto[j + 1]; // Move os produtos uma posição para trás no array
-            }
-            cont--;      // Decrementa o contador de produtos no estoque
-            control = 1; // Indica que a operação de remoção foi realizada com sucesso
-            break;       // Sai do loop após encontrar o produto
-        }
-    }
-
-    if (control) // Se a operação de remoção foi realizada com sucesso
-    {
-        printf("Produto removido com sucesso!\n");
-        salvarEstoque(produto, cont); // Salva o estoque atualizado no arquivo
-        return 0;                     // Retorna 0 para indicar sucesso na operação
+        printf("\nNenhum produto listado.\n");
     }
     else
     {
-        printf("\nProduto não encontrado!\n"); // Mensagem de erro se o produto não foi encontrado no estoque
+        limparBuffer(); // Limpa o buffer do teclado
+        printf("\n* Remover produto\n");
+        printf("\nInforme o nome do produto: ");
+        scanf("%99[^\n]", nome); // Solicita ao usuário que informe o nome do produto a ser removido
+
+        for (int i = 0; i < cont; i++) // Loop para percorrer o estoque e encontrar o produto
+        {
+            if (strcmp(produto[i].nome, nome) == 0) // Verifica se o nome do produto atual é igual ao fornecido pelo usuário
+            {
+                for (int j = i; j < cont - 1; j++) // Loop para reorganizar o estoque após a remoção do produto
+                {
+                    produto[j] = produto[j + 1]; // Move os produtos uma posição para trás no array
+                }
+                cont--;      // Decrementa o contador de produtos no estoque
+                control = 1; // Indica que a operação de remoção foi realizada com sucesso
+                break;       // Sai do loop após encontrar o produto
+            }
+        }
+
+        if (control) // Se a operação de remoção foi realizada com sucesso
+        {
+            printf("Produto removido com sucesso!\n");
+            salvarEstoque(produto, cont); // Salva o estoque atualizado no arquivo
+            return 0;                     // Retorna 0 para indicar sucesso na operação
+        }
+        else
+        {
+            printf("\nProduto não encontrado!\n"); // Mensagem de erro se o produto não foi encontrado no estoque
+            return -1;
+        }
     }
 }
 
@@ -336,16 +348,23 @@ int adicionarUsuario(struct Usuario usuario[MAX], int cont)
 // Função para listar usuários
 void listarUsuarios(struct Usuario usuario[MAX], int cont)
 {
-    for (int i = 0; i < cont; i++) // Loop para percorrer todos os usuários
+    if (cont == 0)
     {
-        printf("\n* Usuário %d", i + 1);
-        printf("\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador"); // Exibe o tipo de usuário
-        printf("\nNome: %s", usuario[i].nome);                                                  // Exibe o nome do usuário
-        printf("\nID: %d\n", usuario[i].ID);                                                    // Exibe o ID do usuário
-
-        if (usuario[i].tipo == 2) // Se o usuário for um administrador
+        printf("\nNenhum usuário listado.\n");
+    }
+    else
+    {
+        for (int i = 0; i < cont; i++) // Loop para percorrer todos os usuários
         {
-            printf("Senha: %s\n", usuario[i].senha); // Exibe a senha do administrador
+            printf("\n* Usuário %d", i + 1);
+            printf("\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador"); // Exibe o tipo de usuário
+            printf("\nNome: %s", usuario[i].nome);                                                  // Exibe o nome do usuário
+            printf("\nID: %d\n", usuario[i].ID);                                                    // Exibe o ID do usuário
+
+            if (usuario[i].tipo == 2) // Se o usuário for um administrador
+            {
+                printf("Senha: %s\n", usuario[i].senha); // Exibe a senha do administrador
+            }
         }
     }
 }
@@ -355,30 +374,37 @@ int removerUsuario(struct Usuario usuario[MAX], int idUserAtual, int cont)
 {
     int id;
 
-    printf("\nInforme o ID do usuário: ");
-    scanf("%d", &id); // Solicita ao usuário que informe o ID do usuário a ser removido
-
-    if (usuario[idUserAtual].tipo == 2 && usuario[idUserAtual].ID == id) // Se o usuário atual for um administrador e tentar remover a si mesmo
+    if (cont == 0)
     {
-        printf("\nUm administrador não pode se auto-remover. %s, por favor, cadastre outro admin para realizar a remoção!\n", usuario[idUserAtual].nome);
+        printf("\nNenhum usuário listado.\n");
     }
     else
     {
-        if (id >= 0 && id < cont) // Se o ID informado estiver dentro dos limites válidos
+        printf("\nInforme o ID do usuário: ");
+        scanf("%d", &id); // Solicita ao usuário que informe o ID do usuário a ser removido
+
+        if (usuario[idUserAtual].tipo == 2 && usuario[idUserAtual].ID == id) // Se o usuário atual for um administrador e tentar remover a si mesmo
         {
-            for (int i = id; i < cont - 1; i++) // Loop para reorganizar o array após a remoção do usuário
-            {
-                usuario[i] = usuario[i + 1];
-            }
-            cont--; // Decrementa o contador de usuários
-            printf("Usuário removido com sucesso!\n");
-            salvarUsuarios(usuario, cont); // Salva os usuários no arquivo
-            return 0;
+            printf("\nUm administrador não pode se auto-remover. %s, por favor, cadastre outro admin para realizar a remoção!\n", usuario[idUserAtual].nome);
         }
         else
         {
-            printf("\nUsuário não encontrado!\n"); // Mensagem de erro se o ID informado não for válido
-            return -1;
+            if (id >= 0 && id < cont) // Se o ID informado estiver dentro dos limites válidos
+            {
+                for (int i = id; i < cont - 1; i++) // Loop para reorganizar o array após a remoção do usuário
+                {
+                    usuario[i] = usuario[i + 1];
+                }
+                cont--; // Decrementa o contador de usuários
+                printf("Usuário removido com sucesso!\n");
+                salvarUsuarios(usuario, cont); // Salva os usuários no arquivo
+                return 0;
+            }
+            else
+            {
+                printf("\nUsuário não encontrado!\n"); // Mensagem de erro se o ID informado não for válido
+                return -1;
+            }
         }
     }
 }

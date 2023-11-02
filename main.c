@@ -76,7 +76,7 @@ int main()
                     case 0:
                         printf("\nEncerrando administração...\n");
                         break;
-                    case 1:
+                    case 1: 
                         printf("\n\t\tADMINISTRAÇÃO DE USUÁRIOS\n");
                         do
                         {
@@ -152,7 +152,6 @@ int main()
                     }
                     break;
                 }
-
             }
             if (encontrouAdm == 0)
             {
