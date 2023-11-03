@@ -4,8 +4,8 @@
 int adicionarAoCarrinho(struct Usuario usuario[MAX], struct Produto produto[MAX], int *contCarrinho, int produtoIndex, int qnt, int estoqueAtualizado)
 {
     int ocorrencia = 0; // Variável para verificar se o produto já existe no carrinho
-    int adicionar;
-
+    int adicionar; // Armazena a quantidade de produtos que o usuário deseja adicionar
+    
     strcpy(usuario[*contCarrinho].carrinho[*contCarrinho].nome, produto[produtoIndex].nome); // Copia o nome do produto para o novo item no carrinho
     for (int i = 0; i < *contCarrinho; i++)
     {

@@ -6,6 +6,24 @@ void limparBuffer()
     while (getchar() != '\n');
 }
 
+// Função para verificar a validade da entrada
+int verificarEntrada(char input[MAX])
+{
+    // Loop através dos caracteres da entrada
+    for (int i = 0; i < strlen(input); i++)
+    {
+        // Verifica se o caractere não é um espaço em branco e se a entrada não é vazia
+        if (!isspace(input[i]) && strlen(input) > 0)
+        {
+            return 0; // Retorna 0 se a entrada é válida
+        }
+    }
+
+    // Se todos os caracteres são espaços em branco ou a entrada é vazia, exibe mensagem de entrada inválida
+    printf("\nEntrada inválida. Tente novamente!\n");
+    return -1; // Retorna -1 indicando que a entrada é inválida
+}
+
 // Função para salvar usuários em um arquivo de texto
 void salvarUsuarios(struct Usuario usuario[MAX], int cont)
 {
@@ -68,12 +86,15 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
     float novoValProduto;       // Armazena o novo valor do produto fornecido pelo usuário
     int encontrouOcorencia = 0; // Sinaliza se o produto já está presente no estoque (1 se encontrado, 0 se não encontrado)
     int operacaoRealizada = 0;  // Sinaliza se alguma operação (adicionar, remover, atualizar preço) foi realizada com sucesso (1 se sim, 0 se não)
+    
+    do // Loop para obter o nome do produto
+    {
+        printf("\n* Adicionar produto %d\n", cont + 1);
+        printf("Nome do produto: ");
+        fgets(nome, MAX, stdin);
+        nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
-    limparBuffer(); // Limpa o buffer do teclado
-
-    printf("\n* Adicionar produto %d\n", cont + 1);
-    printf("Nome do produto: ");
-    scanf("%99[^\n]", nome);
+    } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada não for válida
 
     for (int i = 0; i < cont; i++) // Loop para verificar se o produto já está no estoque
     {
@@ -109,7 +130,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
                 ");
                 scanf("%d", &opcEstoque);
 
-                if (opcEstoque >= 1 && opcEstoque <= 2)
+                if (opcEstoque >= 1 && opcEstoque <= 2) // Valida a opção escolhida pelo usuário
                 {
                     printf("\nInforme a quantidade que deseja %s", (opcEstoque == 1) ? "adicionar: " : "remover: ");
                     scanf("%d", &qntMudarEstoque);
@@ -219,7 +240,8 @@ int removerProduto(struct Produto produto[MAX], int cont)
         limparBuffer(); // Limpa o buffer do teclado
         printf("\n* Remover produto\n");
         printf("\nInforme o nome do produto: ");
-        scanf("%99[^\n]", nome); // Solicita ao usuário que informe o nome do produto a ser removido
+        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do produto a ser removido
+        nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
         for (int i = 0; i < cont; i++) // Loop para percorrer o estoque e encontrar o produto
         {
@@ -249,22 +271,31 @@ int removerProduto(struct Produto produto[MAX], int cont)
     }
 }
 
-// Função para criar admnistrador
+// Função para criar administrador
 void criarAdm(struct Usuario usuario[MAX], int cont)
 {
     char senha[MAX]; // Armazena a senha do administrador fornecida pelo usuário
     char nome[MAX];  // Armazena o nome do administrador fornecido pelo usuário
 
-    limparBuffer(); // Limpa o buffer do teclado
+    // Loop para obter o nome do administrador
+    do
+    {
+        printf("\nCadastrar o nome do administrador: ");
+        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do administrador
+        nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
-    printf("\nCadastrar o nome do administrador: ");
-    scanf("%99[^\n]", nome); // Solicita ao usuário que informe o nome do administrador
+    } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada do nome não for válida
 
-    limparBuffer(); // Limpa novamente o buffer
+    // Loop para obter a senha do administrador
+    do
+    {
+        printf("Cadastrar a senha do administrador: ");
+        fgets(senha, MAX, stdin);           // Solicita ao usuário que informe a senha do administrador
+        senha[strcspn(senha, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
-    printf("Cadastrar a senha do administrador: ");
-    scanf("%49[^\n]", senha); // Solicita ao usuário que informe a senha do administrador
+    } while (verificarEntrada(senha) != 0); // Continua enquanto a entrada da senha não for válida
 
+    // Atribui as informações do administrador à estrutura de usuário
     strcpy(usuario[cont].nome, nome);   // Copia o nome informado para a estrutura de usuário
     strcpy(usuario[cont].senha, senha); // Copia a senha informada para a estrutura de usuário
     usuario[cont].tipo = 2;             // Define o tipo de usuário como administrador
@@ -278,16 +309,19 @@ void criarAdm(struct Usuario usuario[MAX], int cont)
 // Função para criar usuário comum
 void criarUsuarioComum(struct Usuario usuario[MAX], int cont)
 {
-    char senha[MAX]; // Armazena a senha do usuário comum fornecida pelo usuário
-    char nome[MAX];  // Armazena o nome do usuário comum fornecido pelo usuário
+    char nome[MAX];
 
-    limparBuffer(); // Limpa o buffer do teclado
+    // Loop para obter o nome do usuário
+    do
+    {
+        printf("\nCadastrar o nome do administrador: ");
+        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do administrador
+        nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
-    printf("\nCadastrar o nome do usuario: ");
-    scanf("%99[^\n]", nome); // Solicita ao usuário que informe o nome do usuário comum
+    } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada do nome não for válida
 
     strcpy(usuario[cont].nome, nome); // Copia o nome informado para a estrutura de usuário
-    strcpy(usuario[cont].senha, " "); // Define uma senha padrão para usuários comuns
+    strcpy(usuario[cont].senha, "");  // Reseta a senha para usuário comum
     usuario[cont].tipo = 1;           // Define o tipo de usuário como usuário comum
 
     cont++;                  // Incrementa o contador de usuários
@@ -300,7 +334,6 @@ void criarUsuarioComum(struct Usuario usuario[MAX], int cont)
 int adicionarUsuario(struct Usuario usuario[MAX], int cont)
 {
     int tipo; // Armazena o tipo de usuário fornecido pelo usuário (1 para comum, 2 para administrador)
-
     int verifyAdm = 0; // Sinaliza se já existe algum administrador cadastrado (1 se sim, 0 se não)
 
     for (int i = 0; i < cont; i++) // Loop para verificar se já existe algum administrador cadastrado
@@ -324,9 +357,10 @@ int adicionarUsuario(struct Usuario usuario[MAX], int cont)
         printf("\n\
         Informe o tipo de usuário:\n\
         1 - Usuário comum.\n\
-        2 - Administrador.\n");
+        2 - Administrador.\n\
+        ");
         scanf("%d", &tipo); // Solicita ao usuário que informe o tipo de usuário
-
+        limparBuffer();  // Limpar buffer do teclado  
         switch (tipo)
         {
         case 1:
@@ -348,11 +382,11 @@ int adicionarUsuario(struct Usuario usuario[MAX], int cont)
 // Função para listar usuários
 void listarUsuarios(struct Usuario usuario[MAX], int cont)
 {
-    if (cont == 0)
+    if (cont == 0) // Se nenhum usuário estiver listado
     {
         printf("\nNenhum usuário listado.\n");
     }
-    else
+    else // Se listar usuário listado
     {
         for (int i = 0; i < cont; i++) // Loop para percorrer todos os usuários
         {
@@ -372,13 +406,13 @@ void listarUsuarios(struct Usuario usuario[MAX], int cont)
 // Função para remover usuário
 int removerUsuario(struct Usuario usuario[MAX], int idUserAtual, int cont)
 {
-    int id;
+    int id; // Armazena o ID informado pelo usuário
 
-    if (cont == 0)
+    if (cont == 0) // Se nenhum usuário esiver listado para remoção
     {
         printf("\nNenhum usuário listado.\n");
     }
-    else
+    else // Se tiver usuário listado para remoção
     {
         printf("\nInforme o ID do usuário: ");
         scanf("%d", &id); // Solicita ao usuário que informe o ID do usuário a ser removido

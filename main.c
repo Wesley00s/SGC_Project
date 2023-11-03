@@ -19,7 +19,7 @@ int main()
     printf("\n\t========================================================================================================\n");
     printf("\n\tDe Plaza Mercantil SA: Bem-vindo ao nosso sistema! Explore, descubra, compre. É um prazer tê-lo conosco!\n");
     printf("\n\t========================================================================================================\n");
-    printf("\nNenhum administrador cadastrado, por favor, pressione ENTER e efetue o cadastro!\n");
+    printf("\nNenhum administrador cadastrado, por favor, efetue o cadastro!\n");
 
     // Criação do primeiro administrador
     criarAdm(usuario, contUser);
@@ -27,8 +27,8 @@ int main()
 
     do
     {
-        int encontrouAdm = 0; // Inicializa a variável para verificar se o administrador foi encontrado
-        strcpy(nomeAdm, " "); // Reinicializa a variável que armazena o nome do administrador
+        int encontrouAdm = 0;  // Inicializa a variável para verificar se o administrador foi encontrado
+        strcpy(nomeAdm, " ");  // Reinicializa a variável que armazena o nome do administrador
         strcpy(senhaAdm, " "); // Reinicializa a variável que armazena a senha do administrador
 
         // Menu principal para escolher o tipo de usuário
@@ -68,7 +68,8 @@ int main()
                     0 - Sair da administração.\n\
                     1 - Administrar usuários.\n\
                     2 - Administrar produtos.\n\
-                    ", usuario[i].nome);
+                    ",
+                           usuario[i].nome);
                     scanf("%d", &opcaoMenuAdm);
 
                     switch (opcaoMenuAdm)
@@ -76,7 +77,7 @@ int main()
                     case 0:
                         printf("\nEncerrando administração...\n");
                         break;
-                    case 1: 
+                    case 1:
                         printf("\n\t\tADMINISTRAÇÃO DE USUÁRIOS\n");
                         do
                         {
@@ -124,7 +125,7 @@ int main()
                             3 - Remover produto.\n\
                             ");
                             scanf("%d", &opcaoMenuPrincipal);
-
+                            limparBuffer();
                             switch (opcaoMenuPrincipal)
                             {
                             case 0:

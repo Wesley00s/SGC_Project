@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #define MAX 100
 
 void limparBuffer();
@@ -42,6 +43,7 @@ void exibirComprovante(struct Usuario usuario[MAX], int contCarrinho, int usrInd
 void salvarPedidos(struct Usuario usuario[MAX], int contCarrinho, int usrIndex);
 void fazerPedido(struct Produto produto[MAX], struct Usuario usuario[MAX], int cont, int contUsr);
 void carrinhoDeCompras(struct Produto produto[MAX], char nomeProduto[MAX], int qnt, int opcaoCarrinho, int cont);
+int verificarEntrada(char *nome);
 
 // Funções relacionadas aos adimnistradores
 void criarUsuarioComum(struct Usuario usuario[MAX], int cont);
