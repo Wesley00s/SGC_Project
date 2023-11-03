@@ -2,18 +2,18 @@
 
 int main()
 {
-    struct Usuario usuario[MAX];       // Declaração do array de usuários
-    struct Produto produto[MAX];       // Declaração do array de produtos
-    struct ItemCarrinho carrinho[MAX]; // Declaração do array de itens do carrinho
-    char senhaAdm[MAX];                // Armazena a senha do administrador
-    char nomeAdm[MAX];                 // Armazena o nome do administrador
-    int contUser = 0;                  // Contador de usuários
-    int contProdutos = 0;              // Contador de produtos
-    int opcaoMenuPrincipal;            // Variável para armazenar a opção do menu principal
-    int opcaoMenuAdm;                  // Variável para armazenar a opção do menu de administração
-    int opcaoMenuUser;                 // Variável para armazenar a opção do menu de administração de usuários
-    int opcaoTipoUsiaio;               // Variável para armazenar o tipo de usuário
-    int opcaoUsrComum;                 // Variável para armazenar a opção do menu do usuário comum
+    struct Usuario usuario[MAX_USERS];            // Declaração do array de usuários
+    struct Produto produto[MAX_PRODUCTS];         // Declaração do array de produtos
+    struct ItemCarrinho carrinho[MAX_CART_ITEMS]; // Declaração do array de itens do carrinho
+    char senhaAdm[MAX_NAME_LENGTH];               // Armazena a senha do administrador
+    char nomeAdm[MAX_NAME_LENGTH];                // Armazena o nome do administrador
+    int contUser = 0;                             // Contador de usuários
+    int contProdutos = 0;                         // Contador de produtos
+    int opcaoMenuPrincipal;                       // Variável para armazenar a opção do menu principal
+    int opcaoMenuAdm;                             // Variável para armazenar a opção do menu de administração
+    int opcaoMenuUser;                            // Variável para armazenar a opção do menu de administração de usuários
+    int opcaoTipoUsuario;                         // Variável para armazenar o tipo de usuário
+    int opcaoUsrComum;                            // Variável para armazenar a opção do menu do usuário comum
 
     // Mensagem de boas-vindas
     printf("\n\t========================================================================================================\n");
@@ -38,14 +38,16 @@ int main()
         1 - Administrador (Senha requerida).\n\
         2 - Usuário comum.\n\
         ");
-        scanf("%d", &opcaoTipoUsiaio);
+        scanf("%d", &opcaoTipoUsuario);
 
-        switch (opcaoTipoUsiaio)
+        switch (opcaoTipoUsuario)
         {
-        case 0:
+        case EXIT_PROGRAM:
+
             printf("\nObrigado por nos escolher. Encerrando programa...\n");
             break;
-        case 1:
+        case ADMINISTRATOR_OPTION:
+
             encontrouAdm = 0;
             printf("\n\t\tADMINISTRADOR\n");
             limparBuffer();
@@ -68,8 +70,7 @@ int main()
                     0 - Sair da administração.\n\
                     1 - Administrar usuários.\n\
                     2 - Administrar produtos.\n\
-                    ",
-                           usuario[i].nome);
+                    ", usuario[i].nome);
                     scanf("%d", &opcaoMenuAdm);
 
                     switch (opcaoMenuAdm)
@@ -159,7 +160,8 @@ int main()
                 printf("\nCombinação de senha e admin incorreto!\n");
             }
             break;
-        case 2:
+        case COMMON_USER_OPTION:
+
             printf("\n\t\tUSUÁRIO COMUM\n");
             printf("\n\
             O que deseja?\n\
@@ -183,7 +185,7 @@ int main()
         default:
             printf("\nOpção inválida!\n");
         }
-    } while (opcaoTipoUsiaio != 0); // Loop principal, continua até a opção 0 ser escolhida
+    } while (opcaoTipoUsuario != EXIT_PROGRAM); // Loop principal, continua até a opção 0 ser escolhida
 
     return 0;
 }

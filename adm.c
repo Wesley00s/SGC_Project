@@ -7,7 +7,7 @@ void limparBuffer()
 }
 
 // Função para verificar a validade da entrada
-int verificarEntrada(char input[MAX])
+int verificarEntrada(char input[MAX_NAME_LENGTH])
 {
     // Loop através dos caracteres da entrada
     for (int i = 0; i < strlen(input); i++)
@@ -25,7 +25,7 @@ int verificarEntrada(char input[MAX])
 }
 
 // Função para salvar usuários em um arquivo de texto
-void salvarUsuarios(struct Usuario usuario[MAX], int cont)
+void salvarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
 {
     // Abre o arquivo "usuarios.txt" para escrita
     FILE *arquivo = fopen("storage/usuarios.txt", "w");
@@ -55,7 +55,7 @@ void salvarUsuarios(struct Usuario usuario[MAX], int cont)
 }
 
 // Função para salvar estoque em um arquivo de texto
-void salvarEstoque(struct Produto produto[MAX], int cont)
+void salvarEstoque(struct Produto produto[MAX_PRODUCTS], int cont)
 {
     // Abre o arquivo "estoque.txt" para escrita
     FILE *arquivo = fopen("storage/estoque.txt", "w");
@@ -79,9 +79,9 @@ void salvarEstoque(struct Produto produto[MAX], int cont)
 }
 
 // Função para adicionar um produto ao estoque
-int adicionarProduto(struct Produto produto[MAX], int cont)
+int adicionarProduto(struct Produto produto[MAX_PRODUCTS], int cont)
 {
-    char nome[MAX];             // Armazena o nome do produto fornecido pelo usuário
+    char nome[MAX_NAME_LENGTH];             // Armazena o nome do produto fornecido pelo usuário
     int qntMudarEstoque;        // Armazena a quantidade que o usuário deseja adicionar ou remover do estoque do produto
     float novoValProduto;       // Armazena o novo valor do produto fornecido pelo usuário
     int encontrouOcorencia = 0; // Sinaliza se o produto já está presente no estoque (1 se encontrado, 0 se não encontrado)
@@ -91,7 +91,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
     {
         printf("\n* Adicionar produto %d\n", cont + 1);
         printf("Nome do produto: ");
-        fgets(nome, MAX, stdin);
+        fgets(nome, MAX_NAME_LENGTH, stdin);
         nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
     } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada não for válida
@@ -118,12 +118,14 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
 
             switch (opc) // Loop para opções do usuário
             {
-            case 0:
+            case EXIT:
+
                 encontrouOcorencia = 0;
                 printf("\nSaindo...\n");
                 return -1;
                 break;
-            case 1: // Opções para adicionar ou remover do estoque
+            case UPDATE_INVENTORY: // Opções para adicionar ou remover do estoque
+
                 printf("\n\
                 1 - Adicionar\n\
                 2 - Remover\n\
@@ -148,7 +150,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
                 produto[i].estoque += (opcEstoque == 1) ? qntMudarEstoque : (-qntMudarEstoque);
                 printf("\nEstoque atualizado!\n");
                 break;
-            case 2: // Atualiza o preço do produto
+            case UPDATE_PRICE: // Atualiza o preço do produto
 
                 printf("\nNovo preço do produto. Preço atual R$%.2f: R$ ", produto[i].valor);
                 scanf("%f", &novoValProduto);
@@ -208,7 +210,7 @@ int adicionarProduto(struct Produto produto[MAX], int cont)
 }
 
 // Função para listar produtos
-void listarProdutos(struct Produto produto[MAX], int cont)
+void listarProdutos(struct Produto produto[MAX_PRODUCTS], int cont)
 {
     if (cont == 0)
     {
@@ -226,9 +228,9 @@ void listarProdutos(struct Produto produto[MAX], int cont)
     }
 }
 
-int removerProduto(struct Produto produto[MAX], int cont)
+int removerProduto(struct Produto produto[MAX_PRODUCTS], int cont)
 {
-    char nome[MAX];  // Armazena o nome do produto fornecido pelo usuário
+    char nome[MAX_NAME_LENGTH];  // Armazena o nome do produto fornecido pelo usuário
     int control = 0; // Sinaliza se a operação de remoção foi realizada com sucesso (1 se sim, 0 se não)
 
     if (cont == 0)
@@ -240,7 +242,7 @@ int removerProduto(struct Produto produto[MAX], int cont)
         limparBuffer(); // Limpa o buffer do teclado
         printf("\n* Remover produto\n");
         printf("\nInforme o nome do produto: ");
-        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do produto a ser removido
+        fgets(nome, MAX_NAME_LENGTH, stdin);          // Solicita ao usuário que informe o nome do produto a ser removido
         nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
         for (int i = 0; i < cont; i++) // Loop para percorrer o estoque e encontrar o produto
@@ -272,16 +274,16 @@ int removerProduto(struct Produto produto[MAX], int cont)
 }
 
 // Função para criar administrador
-void criarAdm(struct Usuario usuario[MAX], int cont)
+void criarAdm(struct Usuario usuario[MAX_USERS], int cont)
 {
-    char senha[MAX]; // Armazena a senha do administrador fornecida pelo usuário
-    char nome[MAX];  // Armazena o nome do administrador fornecido pelo usuário
+    char senha[MAX_NAME_LENGTH]; // Armazena a senha do administrador fornecida pelo usuário
+    char nome[MAX_NAME_LENGTH];  // Armazena o nome do administrador fornecido pelo usuário
 
     // Loop para obter o nome do administrador
     do
     {
         printf("\nCadastrar o nome do administrador: ");
-        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do administrador
+        fgets(nome, MAX_NAME_LENGTH, stdin);          // Solicita ao usuário que informe o nome do administrador
         nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
     } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada do nome não for válida
@@ -290,7 +292,7 @@ void criarAdm(struct Usuario usuario[MAX], int cont)
     do
     {
         printf("Cadastrar a senha do administrador: ");
-        fgets(senha, MAX, stdin);           // Solicita ao usuário que informe a senha do administrador
+        fgets(senha, MAX_NAME_LENGTH, stdin);           // Solicita ao usuário que informe a senha do administrador
         senha[strcspn(senha, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
     } while (verificarEntrada(senha) != 0); // Continua enquanto a entrada da senha não for válida
@@ -307,15 +309,15 @@ void criarAdm(struct Usuario usuario[MAX], int cont)
 }
 
 // Função para criar usuário comum
-void criarUsuarioComum(struct Usuario usuario[MAX], int cont)
+void criarUsuarioComum(struct Usuario usuario[MAX_USERS], int cont)
 {
-    char nome[MAX];
+    char nome[MAX_NAME_LENGTH];
 
     // Loop para obter o nome do usuário
     do
     {
-        printf("\nCadastrar o nome do administrador: ");
-        fgets(nome, MAX, stdin);          // Solicita ao usuário que informe o nome do administrador
+        printf("\nCadastrar o nome do usuário: ");
+        fgets(nome, MAX_NAME_LENGTH, stdin);          // Solicita ao usuário que informe o nome do usuário
         nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha, se presente
 
     } while (verificarEntrada(nome) != 0); // Continua enquanto a entrada do nome não for válida
@@ -331,7 +333,7 @@ void criarUsuarioComum(struct Usuario usuario[MAX], int cont)
 }
 
 // Função para adicionar usuários
-int adicionarUsuario(struct Usuario usuario[MAX], int cont)
+int adicionarUsuario(struct Usuario usuario[MAX_USERS], int cont)
 {
     int tipo; // Armazena o tipo de usuário fornecido pelo usuário (1 para comum, 2 para administrador)
     int verifyAdm = 0; // Sinaliza se já existe algum administrador cadastrado (1 se sim, 0 se não)
@@ -363,11 +365,13 @@ int adicionarUsuario(struct Usuario usuario[MAX], int cont)
         limparBuffer();  // Limpar buffer do teclado  
         switch (tipo)
         {
-        case 1:
+        case COMMON_USER:
+
             criarUsuarioComum(usuario, cont); // Chama a função para cadastrar um usuário comum
             return 0;
             break;
-        case 2:
+        case ADMINISTRATOR:
+
             criarAdm(usuario, cont); // Chama a função para cadastrar um administrador
             return 0;
             break;
@@ -380,7 +384,7 @@ int adicionarUsuario(struct Usuario usuario[MAX], int cont)
 }
 
 // Função para listar usuários
-void listarUsuarios(struct Usuario usuario[MAX], int cont)
+void listarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
 {
     if (cont == 0) // Se nenhum usuário estiver listado
     {
@@ -404,7 +408,7 @@ void listarUsuarios(struct Usuario usuario[MAX], int cont)
 }
 
 // Função para remover usuário
-int removerUsuario(struct Usuario usuario[MAX], int idUserAtual, int cont)
+int removerUsuario(struct Usuario usuario[MAX_USERS], int idUserAtual, int cont)
 {
     int id; // Armazena o ID informado pelo usuário
 
