@@ -43,7 +43,7 @@ void salvarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
         fprintf(arquivo, "\n* Usuário %d", i + 1);
         fprintf(arquivo, "\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador");
         fprintf(arquivo, "\nNome: %s", usuario[i].nome);
-        fprintf(arquivo, "\nID: %d\n", usuario[i].ID);
+        fprintf(arquivo, "\nID: %d\n", i);
 
         if (usuario[i].tipo == 2) // Se o usuário for do tipo administrador, escreve também a senha
         {
@@ -396,8 +396,8 @@ void listarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
         {
             printf("\n* Usuário %d", i + 1);
             printf("\nPrivilégio: %s", (usuario[i].tipo == 1) ? "Usuário Comum" : "Administrador"); // Exibe o tipo de usuário
-            printf("\nNome: %s", usuario[i].nome);                                                  // Exibe o nome do usuário
-            printf("\nID: %d\n", usuario[i].ID);                                                    // Exibe o ID do usuário
+            printf("\nNome: %s", usuario[i].nome);// Exibe o nome do usuário            
+            printf("\nID: %d\n", i);              // Exibe o ID do usuário
 
             if (usuario[i].tipo == 2) // Se o usuário for um administrador
             {
