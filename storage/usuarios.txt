@@ -1,0 +1,22 @@
+
+* Usuário 1
+Privilégio: Administrador
+Nome: Wesley
+ID: 0
+Senha: 1234
+
+* Usuário 2
+Privilégio: Usuário Comum
+Nome: Maria
+ID: 1
+
+* Usuário 3
+Privilégio: Usuário Comum
+Nome: Paulo
+ID: 2
+
+* Usuário 4
+Privilégio: Administrador
+Nome: Victor
+ID: 3
+Senha: 1357

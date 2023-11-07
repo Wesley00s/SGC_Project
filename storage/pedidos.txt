@@ -1,0 +1,30 @@
+
+
+* PEDIDO
+
+		==================== Comprovante ================
+
+		-------------------------------------------------
+
+		CLIENTE: Maria
+
+		ID_CLIENTE: 1
+
+		Ovo		x 50
+		PREÇO UNITÁRIO: R$0.50
+		SUBTOTAL DE PRODUTO: R$25.00
+
+		Arroz		x 5
+		PREÇO UNITÁRIO: R$5.00
+		SUBTOTAL DE PRODUTO: R$25.00
+
+
+
+		-----------------------------------------------------
+
+		TOTAL DA COMPRA: R$50.00
+
+		-----------------------------------------------------
+			OBRIGADO POR ESCOLHER Plaza Mercantil SA
+		=====================================================
+

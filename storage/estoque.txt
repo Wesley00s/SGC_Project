@@ -1,0 +1,10 @@
+
+* Produto 1
+Nome: Arroz
+Estoque: 495
+Valor: R$5.00
+
+* Produto 2
+Nome: Sal
+Estoque: 230
+Valor: R$0.90
