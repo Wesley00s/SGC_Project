@@ -385,3 +385,109 @@ void fazerPedido(struct Produto produto[MAX_PRODUCTS], struct Usuario usuario[MA
 
     } while (opcaoContinue != 0 && opcaoContinue != 2); // Condições para as opções do usuário e conclusão de compra
 }
+
+void carregarUsuarios(struct Usuario usuario[MAX_USERS], int *contUser)
+{
+    // Abre o arquivo "usuarios.txt" no modo de leitura.
+    FILE *arquivo = fopen("storage/usuarios.txt", "r");
+
+    // Verifica se o arquivo foi aberto corretamente.
+    if (arquivo == NULL)
+    {
+        perror("Arquivo de dados não encontrado. Iniciando com vetor vazio.");
+        *contUser = 0;
+        return;
+    }
+
+    // Lê o valor de contUser (número de usuários) do arquivo.
+    fscanf(arquivo, "%d", contUser);
+
+    // Verifica se o número de usuários não excede o limite máximo (MAX_USERS).
+    if (*contUser > MAX_USERS)
+    {
+        fprintf(stderr, "Número de usuários excede o limite. Ajuste o MAX_USERS.\n");
+        *contUser = 0;
+        fclose(arquivo);
+        return;
+    }
+
+    // Loop para ler cada usuário do arquivo.
+    for (int i = 0; i < *contUser; i++)
+    {
+        char tipoStr[20];
+        // Lê o tipo de usuário (administrador ou não).
+        fscanf(arquivo, "\n* Usuário %*d\nPrivilégio: %19s", tipoStr);
+        usuario[i].tipo = (strcmp(tipoStr, "Administrador") == 0) ? 2 : 1;
+
+        // Limpa o buffer do nome antes da leitura.
+        while (fgetc(arquivo) != '\n')
+            ;
+
+        // Lê o nome.
+        fscanf(arquivo, "Nome: %49[^\n]", usuario[i].nome);
+
+        // Lê o ID.
+        fscanf(arquivo, "\nID: %d", &usuario[i].ID);
+
+        // Se o usuário for do tipo administrador, ler também a senha.
+        if (usuario[i].tipo == 2)
+        {
+            fscanf(arquivo, "\nSenha: %19s", usuario[i].senha);
+        }
+        else
+        {
+            // Consumir a nova linha depois do ID para garantir que a leitura continue corretamente.
+            fgetc(arquivo);
+        }
+    }
+
+    // Fecha o arquivo após a leitura.
+    fclose(arquivo);
+}
+
+void carregarEstoque(struct Produto produto[MAX_PRODUCTS], int *contProduto)
+{
+    // Abre o arquivo "estoque.txt" no modo de leitura.
+    FILE *arquivo = fopen("storage/estoque.txt", "r");
+
+    // Verifica se o arquivo foi aberto corretamente.
+    if (arquivo == NULL)
+    {
+        perror("Arquivo de dados não encontrado. Iniciando com vetor vazio.");
+        *contProduto = 0;
+        return;
+    }
+
+    // Lê o valor de contProduto (número de produtos) do arquivo.
+    fscanf(arquivo, "%d", contProduto);
+
+    // Verifica se o número de produtos não excede o limite máximo (MAX_PRODUCTS).
+    if (*contProduto > MAX_PRODUCTS)
+    {
+        fprintf(stderr, "Número de produtos excede o limite. Ajuste o MAX_PRODUCTS.\n");
+        *contProduto = 0;
+        fclose(arquivo);
+        return;
+    }
+
+    // Loop para ler cada produto do arquivo.
+    for (int i = 0; i < *contProduto; i++)
+    {
+        // Utiliza variáveis temporárias para armazenar os valores lidos.
+        char nomeProduto[MAX_NAME_LENGTH];
+        int estoqueProduto;
+        float valorProduto;
+
+        // Lê os valores do arquivo.
+        fscanf(arquivo, "\n* Produto %*d\nNome: %49s\nEstoque: %d\nValor: R$%f\nNome do Pedido: %49s", nomeProduto, &estoqueProduto, &valorProduto, produto[i].nomePedido);
+
+        // Atribui os valores lidos à struct Produto.
+        strncpy(produto[i].nome, nomeProduto, sizeof(produto[i].nome) - 1);
+        produto[i].nome[sizeof(produto[i].nome) - 1] = '\0'; // Garante que a string seja terminada corretamente.
+        produto[i].estoque = estoqueProduto;
+        produto[i].valor = valorProduto;
+    }
+
+    // Fecha o arquivo após a leitura.
+    fclose(arquivo);
+}

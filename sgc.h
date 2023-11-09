@@ -1,5 +1,5 @@
-#ifndef LIB_H
-#define LIB_H
+#ifndef SGC_H
+#define SGC_H
 
 #include <stdio.h>
 #include <string.h>
@@ -69,7 +69,9 @@ void exibirComprovante(struct Usuario usuario[MAX_USERS], int contCarrinho, int 
 void salvarPedidos(struct Usuario usuario[MAX_USERS], int contCarrinho, int usrIndex);
 void fazerPedido(struct Produto produto[MAX_PRODUCTS], struct Usuario usuario[MAX_USERS], int cont, int contUsr);
 void carrinhoDeCompras(struct Produto produto[MAX_PRODUCTS], char nomeProduto[MAX_NAME_LENGTH], int qnt, int opcaoCarrinho, int cont);
-int verificarEntrada(char *nome);
+void carregarUsuarios(struct Usuario usuario[MAX_USERS], int *contUser);
+void carregarEstoque(struct Produto produto[MAX_PRODUCTS], int *contProduto);
+int verificarEntrada(char nome[MAX_NAME_LENGTH]);
 
 // Funções relacionadas aos adimnistradores
 void criarUsuarioComum(struct Usuario usuario[MAX_USERS], int cont);

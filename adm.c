@@ -28,13 +28,15 @@ int verificarEntrada(char input[MAX_NAME_LENGTH])
 void salvarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
 {
     // Abre o arquivo "usuarios.txt" para escrita
-    FILE *arquivo = fopen("storage/usuarios.txt", "w");
+    FILE *arquivo = fopen("storage/usuarios.txt", "w+");
 
     if (arquivo == NULL) // Verifica se o arquivo foi aberto corretamente
     {
         printf("\nErro ao abrir o arquivo!\n");
         exit(1);
     }
+
+    fprintf(arquivo, "%d", cont);
 
     // Verifica se o arquivo foi aberto corretamente
     for (int i = 0; i < cont; i++)
@@ -58,13 +60,15 @@ void salvarUsuarios(struct Usuario usuario[MAX_USERS], int cont)
 void salvarEstoque(struct Produto produto[MAX_PRODUCTS], int cont)
 {
     // Abre o arquivo "estoque.txt" para escrita
-    FILE *arquivo = fopen("storage/estoque.txt", "w");
+    FILE *arquivo = fopen("storage/estoque.txt", "w+");
 
     if (arquivo == NULL) // Verifica se o arquivo foi aberto corretamente
     {
         perror("\nErro ao abrir arquivo!\n");
         exit(1);
     }
+
+    fprintf(arquivo, "%d", cont);
 
     // Loop para percorrer todos os produtos e escrever suas informações no arquivo
     for (int i = 0; i < cont; i++)
@@ -336,26 +340,8 @@ void criarUsuarioComum(struct Usuario usuario[MAX_USERS], int cont)
 int adicionarUsuario(struct Usuario usuario[MAX_USERS], int cont)
 {
     int tipo; // Armazena o tipo de usuário fornecido pelo usuário (1 para comum, 2 para administrador)
-    int verifyAdm = 0; // Sinaliza se já existe algum administrador cadastrado (1 se sim, 0 se não)
-
-    for (int i = 0; i < cont; i++) // Loop para verificar se já existe algum administrador cadastrado
-    {
-        if (usuario[i].tipo == 2)
-        {
-            verifyAdm = 1; // Indica que já existe um administrador cadastrado
-            break;
-        }
-    }
-
-    if (verifyAdm == 0) // Se não existe administrador cadastrado
-    {
-        printf("\nNenhum administrador cadastrado, por favor, efetue o cadastro de um administrador para prosseguir.\n");
-        usuario[cont].tipo = 2;  // Define o tipo de usuário como administrador
-        criarAdm(usuario, cont); // Chama a função para cadastrar um administrador
-        return 0;
-    }
-    else
-    {
+   
+   
         printf("\n\
         Informe o tipo de usuário:\n\
         1 - Usuário comum.\n\
@@ -379,7 +365,7 @@ int adicionarUsuario(struct Usuario usuario[MAX_USERS], int cont)
             printf("\nTipo inválido!\n"); // Mensagem de erro se o tipo informado não for 1 nem 2
             return -1;
             break;
-        }
+        
     }
 }
 

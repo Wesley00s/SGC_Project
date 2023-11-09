@@ -2,9 +2,11 @@
 
 int main()
 {
-    struct Usuario usuario[MAX_USERS];            // Declaração do array de usuários
-    struct Produto produto[MAX_PRODUCTS];         // Declaração do array de produtos
-    struct ItemCarrinho carrinho[MAX_CART_ITEMS]; // Declaração do array de itens do carrinho
+    // Aloca memória para as structs
+    struct Usuario *usuario = malloc(MAX_USERS * sizeof(struct Usuario));
+    struct Produto *produto = malloc(MAX_PRODUCTS * sizeof(struct Produto));
+    struct ItemCarrinho *carrinho = malloc(MAX_CART_ITEMS * sizeof(struct ItemCarrinho));
+
     char senhaAdm[MAX_NAME_LENGTH];               // Armazena a senha do administrador
     char nomeAdm[MAX_NAME_LENGTH];                // Armazena o nome do administrador
     int contUser = 0;                             // Contador de usuários
@@ -14,16 +16,33 @@ int main()
     int opcaoMenuUser;                            // Variável para armazenar a opção do menu de administração de usuários
     int opcaoTipoUsuario;                         // Variável para armazenar o tipo de usuário
     int opcaoUsrComum;                            // Variável para armazenar a opção do menu do usuário comum
+    int verifyAdm = 0;                            // Sinaliza se já existe algum administrador cadastrado (1 se sim, 0 se não)
 
-    // Mensagem de boas-vindas
+    // Carrega os dados dos arquivos de texto
+    carregarUsuarios(usuario, &contUser);
+    carregarEstoque(produto, &contProdutos);
+
     printf("\n\t========================================================================================================\n");
     printf("\n\tDe Plaza Mercantil SA: Bem-vindo ao nosso sistema! Explore, descubra, compre. É um prazer tê-lo conosco!\n");
     printf("\n\t========================================================================================================\n");
-    printf("\nNenhum administrador cadastrado, por favor, efetue o cadastro!\n");
 
     // Criação do primeiro administrador
-    criarAdm(usuario, contUser);
-    contUser++;
+    for (int i = 0; i < contUser; i++) // Loop para verificar se já existe algum administrador cadastrado
+    {
+        if (usuario[i].tipo == 2)
+        {
+            verifyAdm = 1; // Indica que já existe um administrador cadastrado
+            break;
+        }
+    }
+
+    if (verifyAdm == 0) // Se não existe administrador cadastrado
+    {
+        printf("\nNenhum administrador cadastrado, por favor, efetue o cadastro de um administrador para prosseguir.\n");
+        usuario[contUser].tipo = 2;  // Define o tipo de usuário como administrador
+        criarAdm(usuario, contUser); // Chama a função para cadastrar um administrador
+        contUser++;
+    }
 
     do
     {
@@ -32,6 +51,8 @@ int main()
         strcpy(senhaAdm, " "); // Reinicializa a variável que armazena a senha do administrador
 
         // Menu principal para escolher o tipo de usuário
+        printf("\n\t\tUSUÁRIO - Deslogado\n");
+
         printf("\n\
         Qual tipo de usuário você é:\n\
         0 - Encerrar programa.\n\
@@ -49,7 +70,7 @@ int main()
         case ADMINISTRATOR_OPTION:
 
             encontrouAdm = 0;
-            printf("\n\t\tADMINISTRADOR\n");
+            printf("\n\t\tADMINISTRADOR - Logado\n");
             limparBuffer();
             printf("\nInforme o nome do administrador: ");
             scanf("%99[^\n]", nomeAdm);
@@ -186,6 +207,12 @@ int main()
             printf("\nOpção inválida!\n");
         }
     } while (opcaoTipoUsuario != EXIT_PROGRAM); // Loop principal, continua até a opção 0 ser escolhida
+    // Salva os arquivos de texto antes de fechar o programa
+    salvarUsuarios(usuario, contUser);
+    salvarEstoque(produto, contProdutos);
 
+    free(usuario);
+    free(produto);
+    free(carrinho);
     return 0;
 }
